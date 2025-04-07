@@ -53,4 +53,4 @@ export default class CustomerDetails extends Component {
       </Panel>
     </div>)
   }
-}
+} 
