@@ -1,0 +1,50 @@
+.booking-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: auto;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.search-item {
+  padding: 10px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.search-item.selected {
+  background-color: #f0f0f0;
+  border-color: #333;
+}
+
+.booking-form {
+  margin-top: 20px;
+}
+
+.booking-form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.confirm-button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.error-text {
+  color: red;
+  margin-top: 10px;
+}
