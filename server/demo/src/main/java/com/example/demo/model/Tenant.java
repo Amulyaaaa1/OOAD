@@ -1,6 +1,12 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Tenant {
@@ -14,9 +20,10 @@ public class Tenant {
     @OneToOne
     @MapsId
     @JoinColumn(name = "id")
+    @JsonIgnore // 👈 This hides the User object from the JSON response
     private User user;
 
-    // Getters and setters
+    // Getters and Setters
     public Long getId() {
         return id;
     }

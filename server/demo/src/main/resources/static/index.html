@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rental Management Dashboard</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f1f3f6;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+    }
+
+    th {
+      background-color: #f0f0f0;
+    }
+
+    @media (max-width: 600px) {
+      .buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Rental Management Dashboard</h1>
+
+  <div class="buttons">
+    <button onclick="loadData('owners')">Load Owners</button>
+    <button onclick="loadData('tenants')">Load Tenants</button>
+    <button onclick="loadData('items')">Load Items</button>
+    <button onclick="loadData('users')">Load Users</button>
+  </div>
+
+  <div id="content"></div>
+
+  <script>
+    const baseUrl = 'http://localhost:8080/api/rentals';
+
+    async function loadData(type) {
+      try {
+        const response = await fetch(`${baseUrl}/${type}`);
+        const data = await response.json();
+        displayData(type, data);
+      } catch (err) {
+        document.getElementById('content').innerHTML = `<div class="card"><p>Error: ${err}</p></div>`;
+      }
+    }
+
+    function displayData(type, data) {
+      let html = `<div class="card"><h2>${capitalize(type)}</h2>`;
+      if (data.length === 0) {
+        html += `<p>No data found.</p></div>`;
+      } else {
+        html += `<table><thead><tr>`;
+        const keys = Object.keys(flatten(data[0]));
+        keys.forEach(key => html += `<th>${key}</th>`);
+        html += `</tr></thead><tbody>`;
+        data.forEach(item => {
+          const flatItem = flatten(item);
+          html += `<tr>`;
+          keys.forEach(key => html += `<td>${flatItem[key]}</td>`);
+          html += `</tr>`;
+        });
+        html += `</tbody></table></div>`;
+      }
+      document.getElementById('content').innerHTML = html;
+    }
+
+    function flatten(obj, prefix = '') {
+      let items = {};
+      for (let k in obj) {
+        const val = obj[k];
+        const key = prefix ? `${prefix}.${k}` : k;
+        if (typeof val === 'object' && val !== null && !Array.isArray(val)) {
+          Object.assign(items, flatten(val, key));
+        } else {
+          items[key] = val;
+        }
+      }
+      return items;
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+  </script>
+
+</body>
+</html>

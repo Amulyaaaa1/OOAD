@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Insert New Rental Item</title>
+</head>
+<body>
+  <h2>Insert New Rental Item (Owner)</h2>
+
+  <form id="itemForm">
+    <label>Name:</label><br>
+    <input type="text" id="name" required><br>
+
+    <label>Description:</label><br>
+    <textarea id="description" required></textarea><br>
+
+    <label>Price:</label><br>
+    <input type="number" id="price" required><br>
+
+    <label>Availability:</label><br>
+    <select id="availability">
+      <option value="AVAILABLE">AVAILABLE</option>
+      <option value="NOT_AVAILABLE">NOT_AVAILABLE</option>
+    </select><br><br>
+
+    <label>Owner ID:</label><br>
+    <input type="number" id="ownerId" required><br><br>
+
+    <button type="submit">Insert Item</button>
+  </form>
+
+  <p id="message" style="font-weight: bold;"></p>
+
+  <script>
+    const form = document.getElementById('itemForm');
+    const message = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const item = {
+        name: document.getElementById('name').value,
+        description: document.getElementById('description').value,
+        price: parseFloat(document.getElementById('price').value),
+        availability: document.getElementById('availability').value,
+        owner: {
+          id: parseInt(document.getElementById('ownerId').value)
+        }
+      };
+
+      try {
+        const response = await fetch('http://localhost:8080/api/rentals/items', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(item)
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          message.textContent = 'Item inserted successfully!';
+          message.style.color = 'green';
+          console.log('Item inserted:', data);
+        } else {
+          message.textContent = data.message || 'Failed to insert item.';
+          message.style.color = 'red';
+        }
+      } catch (err) {
+        console.error('Error inserting item:', err);
+        message.textContent = 'Something went wrong!';
+        message.style.color = 'red';
+      }
+    });
+  </script>
+</body>
+</html>

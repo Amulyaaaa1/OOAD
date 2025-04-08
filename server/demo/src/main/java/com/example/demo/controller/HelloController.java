@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api")
 public class HelloController {
     @GetMapping("/hello")
-    public String sayHello() {
-        return "Hello, Spring Boot!";
-    }
+public String sayHello() {
+    System.out.println("API /api/hello was called!");
+    return "Hello from Spring Boot Backend!";
+}
+
 }
